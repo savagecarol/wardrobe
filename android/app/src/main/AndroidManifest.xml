@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.wardrobe">
+   <meta-data android:name="NonAssetContentProvider" android:value="true" />
    <application
         android:label="wardrobe"
         android:name="${applicationName}"
