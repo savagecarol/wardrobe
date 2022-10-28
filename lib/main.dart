@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wardrobe/presentation/FirstPage.dart';
+import 'package:wardrobe/utils/StringValues.dart';
 
-void main() {
+void main() async {
+  await ScreenUtil.ensureScreenSize();
   runApp(const MyApp());
 }
 
@@ -15,13 +18,12 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return MaterialApp(
-      title: 'Wardrobe',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const FirstPage()
-    );
+    return ScreenUtilInit( 
+      builder: (BuildContext context, Widget? child) { return MaterialApp(
+        title: StringValues.APP_NAME,
+        home: Container(child: const FirstPage()
+        )
+      ); });
   }
 }
 
