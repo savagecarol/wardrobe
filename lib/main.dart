@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wardrobe/presentation/FirstPage.dart';
+import 'package:wardrobe/presentation/Profile.dart';
+import 'package:wardrobe/presentation/Wardrobe.dart';
 import 'package:wardrobe/utils/StringValues.dart';
 
 void main() async {
@@ -21,9 +23,15 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit( 
       builder: (BuildContext context, Widget? child) { return MaterialApp(
         title: StringValues.APP_NAME,
-        home: Container(child: const FirstPage()
-        )
-      ); });
+        initialRoute: FirstPage.routeNamed,
+        routes: {
+            FirstPage.routeNamed: (BuildContext context) => FirstPage(),
+            Wardrobe.routeNamed: (BuildContext context) => Wardrobe(),
+            Profile.routeNamed: (BuildContext context) => Profile()
+        },
+        debugShowCheckedModeBanner: false
+        );
+       });
   }
 }
 
