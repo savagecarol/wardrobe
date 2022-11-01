@@ -5,6 +5,7 @@ class StringValues {
   static String LOGO_96 = "assets/logo96.png";
   static String CAMERA = "assets/camera.png";
   static String USER = "assets/user.png";
+  static String GALLERY = "assets/gallery.png";
   /////
   static String FIRST_PAGE = "FirstPage";
   static String WARDROBE = "Wardrobe";
