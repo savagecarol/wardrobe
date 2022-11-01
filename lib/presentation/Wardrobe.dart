@@ -11,11 +11,15 @@ class Wardrobe extends StatefulWidget {
 }
 
 class _WardrobeState extends State<Wardrobe> {
+
+  final GlobalKey<ScaffoldState> _key = GlobalKey(); 
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(builder: (BuildContext context, Widget? child) {
       return SafeArea(
           child: Scaffold(
+             key: _key,
         appBar: AppBar(
             toolbarHeight: 60.h,
             backgroundColor: Colors.white,
@@ -40,9 +44,9 @@ class _WardrobeState extends State<Wardrobe> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 4),
                           child: Image.asset(StringValues.CAMERA)),
-                      InkWell(
+                      GestureDetector(
                         onTap: () {
-                            Navigator.pushNamed(context, Profile.routeNamed);
+                          Scaffold.of(context).openDrawer();
                         },
                         child: Container(
                             height: 44.h,
@@ -58,11 +62,10 @@ class _WardrobeState extends State<Wardrobe> {
         body: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
-            children: [
-
-            ],
+            children: [],
           ),
         ),
+        // drawer: new Drawer(),
       ));
     });
   }

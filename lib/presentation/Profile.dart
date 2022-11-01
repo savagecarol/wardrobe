@@ -30,9 +30,16 @@ class _ProfileState extends State<Profile> {
             },
           ),
           elevation: 0.0,
+          title:   Text(StringValues.PROFILE,
+                 style: TextStyle(
+                   fontSize: 18.h,
+                   fontWeight: FontWeight.bold , 
+                   color: Colors.black
+                 ),),
+          centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.orange[100],
+          backgroundColor: Colors.orange,
           onPressed: () async {
             setState(() {
               isLoading = true;
@@ -61,11 +68,6 @@ class _ProfileState extends State<Profile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Text(StringValues.PROFILE,
-                 style: TextStyle(
-                   fontSize: 32.h,
-                   fontWeight: FontWeight.bold
-                 ),),
                  SizedBox(height : 16.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
