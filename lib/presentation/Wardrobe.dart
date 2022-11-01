@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -21,8 +22,7 @@ class _WardrobeState extends State<Wardrobe> {
   bool isGallery = false;
   bool isCamera = false;
   String file = "assets/gallery.png";
-
-  
+  late Offset _tapDownPosition;
 
   @override
   Widget build(BuildContext context) {
@@ -180,13 +180,186 @@ class _WardrobeState extends State<Wardrobe> {
             padding:
                 const EdgeInsets.only(right: 16, left: 16, bottom: 32, top: 16),
             child: Builder(builder: (context) {
-
               return Wrap(
                 direction: Axis.horizontal,
                 spacing: 8.0,
                 runSpacing: 8.0,
-                children: [Container()
-                
+                children: [
+                    GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _tapDownPosition = details.globalPosition;
+                    },
+                    onLongPress: () async {
+        
+                      double? height = Overlay.of(context)?.context.size?.height;
+                      double? width = Overlay.of(context)?.context.size?.width;
+                      showMenu(
+                          items: <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.delete),
+                                  Text("Delete"),
+                                ],
+                              ),
+                            )
+                          ],
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            _tapDownPosition.dx,
+                            _tapDownPosition.dy,
+                            width!- _tapDownPosition.dx,
+                             height! - _tapDownPosition.dy,
+                          ));
+                    },
+                    child: Container(child: Image.asset(file)),
+                  ) ,
+
+                  GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _tapDownPosition = details.globalPosition;
+                    },
+                    onLongPress: () async {
+        
+                      double? height = Overlay.of(context)?.context.size?.height;
+                      double? width = Overlay.of(context)?.context.size?.width;
+                      showMenu(
+                          items: <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.delete),
+                                  Text("Delete"),
+                                ],
+                              ),
+                            )
+                          ],
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            _tapDownPosition.dx,
+                            _tapDownPosition.dy,
+                            width!- _tapDownPosition.dx,
+                             height! - _tapDownPosition.dy,
+                          ));
+                    },
+                    child: Container(child: Image.asset(file)),
+                  ),
+                  GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _tapDownPosition = details.globalPosition;
+                    },
+                    onLongPress: () async {
+        
+                      double? height = Overlay.of(context)?.context.size?.height;
+                      double? width = Overlay.of(context)?.context.size?.width;
+                      showMenu(
+                          items: <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.delete),
+                                  Text("Delete"),
+                                ],
+                              ),
+                            )
+                          ],
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            _tapDownPosition.dx,
+                            _tapDownPosition.dy,
+                            width!- _tapDownPosition.dx,
+                             height! - _tapDownPosition.dy,
+                          ));
+                    },
+                    child: Container(child: Image.asset(file)),
+                  ),
+                  GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _tapDownPosition = details.globalPosition;
+                    },
+                    onLongPress: () async {
+        
+                      double? height = Overlay.of(context)?.context.size?.height;
+                      double? width = Overlay.of(context)?.context.size?.width;
+                      showMenu(
+                          items: <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.delete),
+                                  Text("Delete"),
+                                ],
+                              ),
+                            )
+                          ],
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            _tapDownPosition.dx,
+                            _tapDownPosition.dy,
+                            width!- _tapDownPosition.dx,
+                             height! - _tapDownPosition.dy,
+                          ));
+                    },
+                    child: Container(child: Image.asset(file)),
+                  ),
+                  GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _tapDownPosition = details.globalPosition;
+                    },
+                    onLongPress: () async {
+        
+                      double? height = Overlay.of(context)?.context.size?.height;
+                      double? width = Overlay.of(context)?.context.size?.width;
+                      showMenu(
+                          items: <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.delete),
+                                  Text("Delete"),
+                                ],
+                              ),
+                            )
+                          ],
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            _tapDownPosition.dx,
+                            _tapDownPosition.dy,
+                            width!- _tapDownPosition.dx,
+                             height! - _tapDownPosition.dy,
+                          ));
+                    },
+                    child: Container(child: Image.asset(file)),
+                  ),
+                  GestureDetector(
+                    onTapDown: (TapDownDetails details) {
+                      _tapDownPosition = details.globalPosition;
+                    },
+                    onLongPress: () async {
+        
+                      double? height = Overlay.of(context)?.context.size?.height;
+                      double? width = Overlay.of(context)?.context.size?.width;
+                      showMenu(
+                          items: <PopupMenuEntry>[
+                            PopupMenuItem(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.delete),
+                                  Text("Delete"),
+                                ],
+                              ),
+                            )
+                          ],
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            _tapDownPosition.dx,
+                            _tapDownPosition.dy,
+                            width!- _tapDownPosition.dx,
+                             height! - _tapDownPosition.dy,
+                          ));
+                    },
+                    child: Container(child: Image.asset(file)),
+                  )
                 ],
               );
             }),
