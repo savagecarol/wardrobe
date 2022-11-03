@@ -12,13 +12,14 @@ class PreferenceService {
   Future<SharedPreferences> _getInstance() async {
     return SharedPreferences.getInstance();
   }
-  
+
   Future<void> setFilePath(String files) async {
     (await _getInstance()).setString(PreferenceService.filePath, files);
   }
 
-    Future<String?> getFilePath() async {
-    return (await _getInstance()).getString(PreferenceService.filePath);
+  Future<String> getFilePath() async {
+    String? value =
+        (await _getInstance()).getString(PreferenceService.filePath);
+    return (value != null) ?  value : "";
   }
-
 }

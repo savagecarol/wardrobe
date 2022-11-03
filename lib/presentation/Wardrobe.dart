@@ -1,7 +1,7 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,354 +18,281 @@ class Wardrobe extends StatefulWidget {
 
 class _WardrobeState extends State<Wardrobe> {
   final PreferenceService preferenceService = PreferenceService.getInstance();
-  bool isLoading = false;
+  bool isRatingLoading = false;
   bool isGallery = false;
   bool isCamera = false;
-  String file = "assets/gallery.png";
+  bool isLoading = false;
+  String file = "";
   late Offset _tapDownPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    getImages();
+  }
+
+  getImages() async {
+    setState(() {
+      isLoading = true;
+    });
+    file = await preferenceService.getFilePath();
+    print(file);
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(builder: (BuildContext context, Widget? child) {
       return SafeArea(
-          child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-            toolbarHeight: 60.h,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            title: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                          height: 48.h,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Image.asset(StringValues.LOGO_96)),
-                    ],
+          child: isLoading
+              ? Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Container(
+                    child: Center(
+                      child: CircularProgressIndicator(color: Colors.black),
+                    ),
                   ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          try {
-                            setState(() {
-                              isCamera = false;
-                            });
-                            XFile? xFile = (await ImagePicker.platform
-                                .getImage(source: ImageSource.camera));
-                            if (xFile != null) {
-                              String? getFiles =
-                                  await preferenceService.getFilePath();
-                              if (getFiles == null)
-                                preferenceService.setFilePath(file + " ");
-                              else
-                                preferenceService
-                                    .setFilePath(getFiles + file + " ");
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: "Please choose Image",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.black,
-                                  textColor: Colors.white,
-                                  fontSize: 16.h);
-                            }
-                          } catch (e) {
-                            Fluttertoast.showToast(
-                                msg: "OOps! Some error occur",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.black,
-                                textColor: Colors.white,
-                                fontSize: 16.h);
-                          }
-                          setState(() {
-                            isCamera = false;
-                          });
-                        },
-                        child: isCamera
-                            ? CircularProgressIndicator(color: Colors.black)
-                            : Container(
-                                height: 48.h,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 4),
-                                child: Image.asset(StringValues.CAMERA)),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          try {
-                            setState(() {
-                              isGallery = false;
-                            });
-                            XFile? xFile = (await ImagePicker.platform
-                                .getImage(source: ImageSource.gallery));
-                            if (xFile != null) {
-                              file = xFile.path;
-                              String? getFiles =
-                                  await preferenceService.getFilePath();
-                              if (getFiles == null)
-                                preferenceService.setFilePath(file + " ");
-                              else
-                                preferenceService
-                                    .setFilePath(getFiles + file + " ");
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: "Please choose Image",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.black,
-                                  textColor: Colors.white,
-                                  fontSize: 16.h);
-                            }
-                          } catch (e) {
-                            Fluttertoast.showToast(
-                                msg: "OOps! Some error occur",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.black,
-                                textColor: Colors.white,
-                                fontSize: 16.h);
-                          }
-                          setState(() {
-                            isGallery = false;
-                          });
-                        },
-                        child: isGallery
-                            ? CircularProgressIndicator(color: Colors.black)
-                            : Container(
-                                height: 48.h,
-                                padding: const EdgeInsets.only(
-                                    left: 16, top: 9, bottom: 9),
-                                child: Image.asset(StringValues.GALLERY)),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.black,
-          onPressed: () async {
-            setState(() {
-              isLoading = true;
-            });
-            if (await canLaunchUrl(Uri.parse(StringValues.APP_URL))) {
-              await launch(StringValues.APP_URL);
-            } else {
-              Fluttertoast.showToast(
-                  msg: "OOps! Some Error Occur",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.black,
-                  textColor: Colors.white,
-                  fontSize: 16.h);
-            }
-            setState(() {
-              isLoading = false;
-            });
-          },
-          child: isLoading ? CircularProgressIndicator() : Icon(Icons.star),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding:
-                const EdgeInsets.only(right: 16, left: 16, bottom: 32, top: 16),
-            child: Builder(builder: (context) {
-              return Wrap(
-                direction: Axis.horizontal,
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: [
-                    GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _tapDownPosition = details.globalPosition;
-                    },
-                    onLongPress: () async {
-        
-                      double? height = Overlay.of(context)?.context.size?.height;
-                      double? width = Overlay.of(context)?.context.size?.width;
-                      showMenu(
-                          items: <PopupMenuEntry>[
-                            PopupMenuItem(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.delete),
-                                  Text("Delete"),
-                                ],
-                              ),
-                            )
-                          ],
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            _tapDownPosition.dx,
-                            _tapDownPosition.dy,
-                            width!- _tapDownPosition.dx,
-                             height! - _tapDownPosition.dy,
-                          ));
-                    },
-                    child: Container(child: Image.asset(file)),
-                  ) ,
+                )
+              : Scaffold(
+                  backgroundColor: Colors.white,
+                  appBar: AppBar(
+                      toolbarHeight: 60.h,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      title: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                    height: 48.h,
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: Image.asset(StringValues.LOGO_96)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    try {
+                                      setState(() {
+                                        isCamera = false;
+                                      });
+                                      XFile? xFile = (await ImagePicker.platform
+                                          .getImage(
+                                              source: ImageSource.camera));
+                                      if (xFile != null) {
+                                        if (file == null)
+                                          preferenceService
+                                              .setFilePath(xFile.path + ",");
+                                        else
+                                          preferenceService.setFilePath(
+                                              file + xFile.path + ",");
+                                        file = await preferenceService
+                                            .getFilePath();
 
-                  GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _tapDownPosition = details.globalPosition;
-                    },
-                    onLongPress: () async {
-        
-                      double? height = Overlay.of(context)?.context.size?.height;
-                      double? width = Overlay.of(context)?.context.size?.width;
-                      showMenu(
-                          items: <PopupMenuEntry>[
-                            PopupMenuItem(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.delete),
-                                  Text("Delete"),
-                                ],
-                              ),
-                            )
+                                        file = await preferenceService
+                                            .getFilePath();
+                                        print(file);
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "Please choose Image",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.black,
+                                            textColor: Colors.white,
+                                            fontSize: 16.h);
+                                      }
+                                    } catch (e) {
+                                      Fluttertoast.showToast(
+                                          msg: "OOps! Some error occur",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white,
+                                          fontSize: 16.h);
+                                    }
+                                    setState(() {
+                                      isCamera = false;
+                                    });
+                                  },
+                                  child: isCamera
+                                      ? CircularProgressIndicator(
+                                          color: Colors.black)
+                                      : Container(
+                                          height: 48.h,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 0, vertical: 4),
+                                          child:
+                                              Image.asset(StringValues.CAMERA)),
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    try {
+                                      setState(() {
+                                        isGallery = false;
+                                      });
+                                      XFile? xFile = (await ImagePicker.platform
+                                          .getImage(
+                                              source: ImageSource.gallery));
+                                      if (xFile != null) {
+                                        if (file == null)
+                                          preferenceService
+                                              .setFilePath(xFile.path + ",");
+                                        else
+                                          preferenceService.setFilePath(
+                                              file + xFile.path + ",");
+                                        file = await preferenceService
+                                            .getFilePath();
+                                        print(file);
+                                      } else {
+                                        Fluttertoast.showToast(
+                                            msg: "Please choose Image",
+                                            toastLength: Toast.LENGTH_SHORT,
+                                            gravity: ToastGravity.BOTTOM,
+                                            timeInSecForIosWeb: 1,
+                                            backgroundColor: Colors.black,
+                                            textColor: Colors.white,
+                                            fontSize: 16.h);
+                                      }
+                                    } catch (e) {
+                                      Fluttertoast.showToast(
+                                          msg: "OOps! Some error occur",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.black,
+                                          textColor: Colors.white,
+                                          fontSize: 16.h);
+                                    }
+                                    setState(() {
+                                      isGallery = false;
+                                    });
+                                  },
+                                  child: isGallery
+                                      ? CircularProgressIndicator(
+                                          color: Colors.black)
+                                      : Container(
+                                          height: 48.h,
+                                          padding: const EdgeInsets.only(
+                                              left: 16, top: 9, bottom: 9),
+                                          child: Image.asset(
+                                              StringValues.GALLERY)),
+                                ),
+                              ],
+                            ),
                           ],
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            _tapDownPosition.dx,
-                            _tapDownPosition.dy,
-                            width!- _tapDownPosition.dx,
-                             height! - _tapDownPosition.dy,
-                          ));
+                        ),
+                      )),
+                  floatingActionButton: FloatingActionButton(
+                    backgroundColor: Colors.black,
+                    onPressed: () async {
+                      setState(() {
+                        isRatingLoading = true;
+                      });
+                      if (await canLaunchUrl(Uri.parse(StringValues.APP_URL))) {
+                        await launch(StringValues.APP_URL);
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "OOps! Some Error Occur",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.black,
+                            textColor: Colors.white,
+                            fontSize: 16.h);
+                      }
+                      setState(() {
+                        isRatingLoading = false;
+                      });
                     },
-                    child: Container(child: Image.asset(file)),
+                    child: isRatingLoading
+                        ? CircularProgressIndicator()
+                        : Icon(Icons.star),
                   ),
-                  GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _tapDownPosition = details.globalPosition;
-                    },
-                    onLongPress: () async {
-        
-                      double? height = Overlay.of(context)?.context.size?.height;
-                      double? width = Overlay.of(context)?.context.size?.width;
-                      showMenu(
-                          items: <PopupMenuEntry>[
-                            PopupMenuItem(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.delete),
-                                  Text("Delete"),
-                                ],
-                              ),
-                            )
-                          ],
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            _tapDownPosition.dx,
-                            _tapDownPosition.dy,
-                            width!- _tapDownPosition.dx,
-                             height! - _tapDownPosition.dy,
-                          ));
-                    },
-                    child: Container(child: Image.asset(file)),
+                  body: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          right: 16, left: 16, bottom: 32, top: 16),
+                      child: Builder(builder: (context) {
+                        List<Widget> x = [];
+                        List p = file.split(",");
+                        p.forEach((e) {
+                          x.add(WrapItem(e));
+                        });
+                        x.removeAt(p.length - 1);
+                        return file == ""
+                            ? Container(
+                                height: ScreenUtil().screenHeight / 2 + 120,
+                                child: Center(
+                                  child: Text("Please Insert Image",
+                                      style: TextStyle(
+                                          fontSize: 24.sp,
+                                          fontWeight: FontWeight.w600)),
+                                ),
+                              )
+                            : Wrap(
+                                direction: Axis.horizontal,
+                                spacing: 8.0,
+                                runSpacing: 8.0,
+                                children: x,
+                              );
+                      }),
+                    ),
                   ),
-                  GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _tapDownPosition = details.globalPosition;
-                    },
-                    onLongPress: () async {
-        
-                      double? height = Overlay.of(context)?.context.size?.height;
-                      double? width = Overlay.of(context)?.context.size?.width;
-                      showMenu(
-                          items: <PopupMenuEntry>[
-                            PopupMenuItem(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.delete),
-                                  Text("Delete"),
-                                ],
-                              ),
-                            )
-                          ],
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            _tapDownPosition.dx,
-                            _tapDownPosition.dy,
-                            width!- _tapDownPosition.dx,
-                             height! - _tapDownPosition.dy,
-                          ));
-                    },
-                    child: Container(child: Image.asset(file)),
-                  ),
-                  GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _tapDownPosition = details.globalPosition;
-                    },
-                    onLongPress: () async {
-        
-                      double? height = Overlay.of(context)?.context.size?.height;
-                      double? width = Overlay.of(context)?.context.size?.width;
-                      showMenu(
-                          items: <PopupMenuEntry>[
-                            PopupMenuItem(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.delete),
-                                  Text("Delete"),
-                                ],
-                              ),
-                            )
-                          ],
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            _tapDownPosition.dx,
-                            _tapDownPosition.dy,
-                            width!- _tapDownPosition.dx,
-                             height! - _tapDownPosition.dy,
-                          ));
-                    },
-                    child: Container(child: Image.asset(file)),
-                  ),
-                  GestureDetector(
-                    onTapDown: (TapDownDetails details) {
-                      _tapDownPosition = details.globalPosition;
-                    },
-                    onLongPress: () async {
-        
-                      double? height = Overlay.of(context)?.context.size?.height;
-                      double? width = Overlay.of(context)?.context.size?.width;
-                      showMenu(
-                          items: <PopupMenuEntry>[
-                            PopupMenuItem(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(Icons.delete),
-                                  Text("Delete"),
-                                ],
-                              ),
-                            )
-                          ],
-                          context: context,
-                          position: RelativeRect.fromLTRB(
-                            _tapDownPosition.dx,
-                            _tapDownPosition.dy,
-                            width!- _tapDownPosition.dx,
-                             height! - _tapDownPosition.dy,
-                          ));
-                    },
-                    child: Container(child: Image.asset(file)),
-                  )
-                ],
-              );
-            }),
-          ),
-        ),
-      ));
+                ));
     });
+  }
+
+  Widget WrapItem(String image) {
+    return GestureDetector(
+      onTapDown: (TapDownDetails details) {
+        _tapDownPosition = details.globalPosition;
+      },
+      onLongPress: () async {
+        double? height = Overlay.of(context)?.context.size?.height;
+        double? width = Overlay.of(context)?.context.size?.width;
+        showMenu(
+            items: <PopupMenuEntry>[
+              PopupMenuItem(
+                child: GestureDetector(
+                  onTap: () {
+                    
+                  },
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.share),
+                      Text("Whatsapp"),
+                    ],
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.delete),
+                    Text("Delete"),
+                  ],
+                ),
+              )
+            ],
+            context: context,
+            position: RelativeRect.fromLTRB(
+              _tapDownPosition.dx,
+              _tapDownPosition.dy,
+              width! - _tapDownPosition.dx,
+              height! - _tapDownPosition.dy,
+            ));
+      },
+      child: Container(child: Image.file(File(image))),
+    );
   }
 }
