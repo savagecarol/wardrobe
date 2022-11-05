@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_whatsapp_stickers/flutter_whatsapp_stickers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wardrobe/service/PreferenceService.dart';
 import 'package:wardrobe/utils/StringValues.dart';
+import 'package:wardrobe/utils/utils.dart';
 
 class Wardrobe extends StatefulWidget {
   static String routeNamed = StringValues.WARDROBE;
@@ -17,6 +18,7 @@ class Wardrobe extends StatefulWidget {
 }
 
 class _WardrobeState extends State<Wardrobe> {
+  final WhatsAppStickers _waStickers = WhatsAppStickers();
   final PreferenceService preferenceService = PreferenceService.getInstance();
   bool isRatingLoading = false;
   bool isGallery = false;
@@ -24,6 +26,16 @@ class _WardrobeState extends State<Wardrobe> {
   bool isLoading = false;
   String file = "";
   late Offset _tapDownPosition;
+
+  String identifier = "2";
+  String name = "Savagecarol";
+  String publisher = "Savagecarol Stickers";
+  String publisher_email = "karthiksharma1411@gmail.com";
+  String publisher_website = "https://savagecarol.github.io/";
+  String privacy_policy_website =
+      "https://www.freeprivacypolicy.com/live/3c75d84c-10e4-427e-8ee3-58fe31cdb53d";
+  String license_agreement_website = "";
+  String image_data_version = "1";
 
   @override
   void initState() {
@@ -225,8 +237,10 @@ class _WardrobeState extends State<Wardrobe> {
                       child: Builder(builder: (context) {
                         List<Widget> x = [];
                         List p = file.split(",");
+                        int i = 0;
                         p.forEach((e) {
-                          x.add(WrapItem(e));
+                          x.add(WrapItem(e, i));
+                          i++;
                         });
                         x.removeAt(p.length - 1);
                         return file == ""
@@ -252,47 +266,89 @@ class _WardrobeState extends State<Wardrobe> {
     });
   }
 
-  Widget WrapItem(String image) {
-    return GestureDetector(
-      onTapDown: (TapDownDetails details) {
-        _tapDownPosition = details.globalPosition;
-      },
-      onLongPress: () async {
-        double? height = Overlay.of(context)?.context.size?.height;
-        double? width = Overlay.of(context)?.context.size?.width;
-        showMenu(
-            items: <PopupMenuEntry>[
-              PopupMenuItem(
-                child: GestureDetector(
-                  onTap: () {
-                    
-                  },
-                  child: Row(
-                    children: <Widget>[
-                      Icon(Icons.share),
-                      Text("Whatsapp"),
-                    ],
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.delete),
-                    Text("Delete"),
+  Widget WrapItem(String image, int i) {
+    return image == ""
+        ? Container()
+        : GestureDetector(
+            onTapDown: (TapDownDetails details) {
+              _tapDownPosition = details.globalPosition;
+            },
+            onLongPress: () async {
+              double? height = Overlay.of(context)?.context.size?.height;
+              double? width = Overlay.of(context)?.context.size?.width;
+              showMenu(
+                  items: <PopupMenuEntry>[
+                    PopupMenuItem(
+                      child: GestureDetector(
+                        onTap: () {
+                          try {
+                            print("Dfdsfds");
+                            _waStickers.addStickerPack(
+                              packageName: WhatsAppPackage.Consumer,
+                              stickerPackIdentifier: identifier,
+                              stickerPackName: name,
+                              listener: (action, status, {error = ""}) =>
+                                  processResponse(
+                                action: action,
+                                result: status,
+                                error: error,
+                              ),
+                            );
+                          } catch (e) {
+                            Fluttertoast.showToast(
+                                msg: "Oops! Some Error Occur",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.white,
+                                fontSize: 16.h);
+                          }
+
+                          Navigator.pop(context);
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.share),
+                            Text("Whatsapp"),
+                          ],
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          List r = file.split(",");
+                          r.removeAt(i);
+                          file = r.join(',') + ",";
+                          await preferenceService.setFilePath(file);
+                          print(file);
+                          setState(() {
+                            isLoading = false;
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.delete),
+                            Text("Delete"),
+                          ],
+                        ),
+                      ),
+                    )
                   ],
-                ),
-              )
-            ],
-            context: context,
-            position: RelativeRect.fromLTRB(
-              _tapDownPosition.dx,
-              _tapDownPosition.dy,
-              width! - _tapDownPosition.dx,
-              height! - _tapDownPosition.dy,
-            ));
-      },
-      child: Container(child: Image.file(File(image))),
-    );
+                  context: context,
+                  position: RelativeRect.fromLTRB(
+                    _tapDownPosition.dx,
+                    _tapDownPosition.dy,
+                    width! - _tapDownPosition.dx,
+                    height! - _tapDownPosition.dy,
+                  ));
+            },
+            child: Container(child: Image.file(File(image))),
+          );
   }
 }
