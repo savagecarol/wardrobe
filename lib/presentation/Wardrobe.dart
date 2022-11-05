@@ -27,15 +27,6 @@ class _WardrobeState extends State<Wardrobe> {
   String file = "";
   late Offset _tapDownPosition;
 
-  String identifier = "2";
-  String name = "Savagecarol";
-  String publisher = "Savagecarol Stickers";
-  String publisher_email = "karthiksharma1411@gmail.com";
-  String publisher_website = "https://savagecarol.github.io/";
-  String privacy_policy_website =
-      "https://www.freeprivacypolicy.com/live/3c75d84c-10e4-427e-8ee3-58fe31cdb53d";
-  String license_agreement_website = "";
-  String image_data_version = "1";
 
   @override
   void initState() {
