@@ -273,11 +273,10 @@ class _WardrobeState extends State<Wardrobe> {
                       child: GestureDetector(
                         onTap: () {
                           try {
-                            print("Dfdsfds");
                             _waStickers.addStickerPack(
                               packageName: WhatsAppPackage.Consumer,
-                              stickerPackIdentifier: identifier,
-                              stickerPackName: name,
+                              stickerPackIdentifier: "1",
+                              stickerPackName: "Cute Paandoo",
                               listener: (action, status, {error = ""}) =>
                                   processResponse(
                                 action: action,
@@ -339,7 +338,7 @@ class _WardrobeState extends State<Wardrobe> {
                     height! - _tapDownPosition.dy,
                   ));
             },
-            child: Container(child: Image.file(File(image))),
+            child: Container( height : 120 , width : 120 , child: Image.file(File(image))),
           );
   }
 }

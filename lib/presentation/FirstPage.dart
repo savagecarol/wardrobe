@@ -22,7 +22,7 @@ class _FirstPageState extends State<FirstPage> {
   }
 
   startTime() async {
-    var duration = const Duration(seconds: 4);
+    var duration = const Duration(seconds: 10);
     Timer(duration, route);
   }
 

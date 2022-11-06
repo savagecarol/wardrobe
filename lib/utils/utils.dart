@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 
 
-  String identifier = "1";
+  String identifier = "2";
   String name = "Savagecarol";
   String publisher = "Savagecarol Stickers";
   String publisher_email = "karthiksharma1411@gmail.com";
@@ -40,7 +40,8 @@ void createLocalFile() async {
         "privacy_policy_website":
            privacy_policy_website,
         "license_agreement_website": "",
-        "image_data_version": "1",
+        "image_data_version": "2",
+      "avoid_cache": false,
         "stickers": [
           {
             "image_file": "1.webp",

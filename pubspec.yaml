@@ -67,7 +67,7 @@ flutter_icons:
 flutter:
   assets:
     - assets/
-    - sticker_packs/
+    - sticker_packs/1/
     - sticker_packs/sticker_packs.json
  
 

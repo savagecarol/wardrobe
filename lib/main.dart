@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wardrobe/presentation/FirstPage.dart';
-import 'package:wardrobe/presentation/Profile.dart';
 import 'package:wardrobe/presentation/Wardrobe.dart';
 import 'package:wardrobe/utils/StringValues.dart';
 
@@ -27,7 +26,6 @@ class MyApp extends StatelessWidget {
         routes: {
             FirstPage.routeNamed: (BuildContext context) => FirstPage(),
             Wardrobe.routeNamed: (BuildContext context) => Wardrobe(),
-            Profile.routeNamed: (BuildContext context) => Profile()
         },
         debugShowCheckedModeBanner: false
         );
